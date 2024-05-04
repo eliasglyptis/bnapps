@@ -1,0 +1,23 @@
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+<script>
+  <% if notice %>
+    iziToast.success({
+      title: "Success",
+      message: '<%= notice %>',
+      position: 'topRight',
+      timeout: '5000',
+      icon: 'fa fa-check'
+    });
+  <% end %>
+
+  <% if alert %>
+    iziToast.error({
+      title: "Error",
+      message: '<%= alert %>',
+      position: 'topRight',
+      timeout: '5000',
+      icon: 'fa fa-exclamation-triangle'
+    });
+  <% end %>
+</script>
