@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   namespace :admin do
       resources :users
-      resources :meetings
-      resources :bookings
+      resources :meetings #, except: [:destroy] 
+      resources :bookings #, only: [:index, :show]
 
       root to: "users#index"
     end

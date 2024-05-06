@@ -28,42 +28,38 @@ class MeetingDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
-    id
-    bookings
-    description
+    topic
+    start_time
     duration
+    bookings
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
-    id
-    bookings
-    description
-    duration
+    topic
     image
+    description
+    start_time
+    duration
     password
     price
-    start_time
-    topic
     zoom_id
-    created_at
-    updated_at
+    bookings
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
-    bookings
-    description
-    duration
-    image
-    password
-    price
-    start_time
     topic
+    image
+    description
+    start_time
+    duration
+    price
     zoom_id
+    password
   ].freeze
 
   # COLLECTION_FILTERS
@@ -84,4 +80,8 @@ class MeetingDashboard < Administrate::BaseDashboard
   # def display_resource(meeting)
   #   "Meeting ##{meeting.id}"
   # end
+
+  def display_resource(meeting)
+    meeting.topic.truncate(20)
+  end
 end
