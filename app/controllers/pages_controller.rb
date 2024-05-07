@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   def home
+    @meetings = Meeting.upcoming
   end
 
   def about

@@ -5,6 +5,24 @@ class Meeting < ApplicationRecord
   validates :topic, presence: true, length: { maximum: 50 }
   validates :image, :start_time, :duration, presence: true
 
+  default_scope { order(start_time: :desc) }
+
+  scope :upcoming, -> {where("start_time >= ?", Date.today)}
+
+  def is_premium
+    return self.price > 0
+  end
+
+  def show_start_time
+    "#{self.start_time.to_datetime.strftime('%Y-%m-%dT%H:%M:%S')}"
+    #self.start_time.strftime("%Y-%m-%dT%H:%M:%S")
+  end
+
+  def show_price
+    self.price > 0 ? "$#{self.price}" : "Free"
+    # self.price > 0 ? format("$%.2f", self.price) : "Free"
+  end
+
   after_create :create_zoom_meeting
   after_update :update_zoom_meeting
 

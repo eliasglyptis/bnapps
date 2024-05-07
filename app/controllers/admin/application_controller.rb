@@ -11,7 +11,7 @@ module Admin
 
     def authenticate_admin
       # TODO Add authentication logic here.
-      unless current_user.email == Rails.application.credentials[Rails.env.to_sym][:ADMINISTRATOR_AUTHORIZATION_EMAIL]
+      unless current_user.email == Rails.application.credentials[Rails.env.to_sym][:administrator_authorization_email]
         redirect_to root_path, alert: "You need to get authorization to access the admin console. Please contact me if you need it."
       end
     end
