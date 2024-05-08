@@ -14,7 +14,18 @@ class PagesController < ApplicationController
   end
 
   def receipt
-    @booking = Booking.find(params[:booking_id])
+    @booking = current_user.bookings.where(id: params[:booking_id]).first
+
+    if !@booking.nil?
+      respond_to do |format|
+        format.html
+        format.pdf do
+          render pdf: "booking_#{@booking.id}", template: "pages/receipt", formats: [:html], disposition: "attachment" # Excluding ".pdf" extension.
+        end
+      end
+    else
+      redirect_to dashboard_path
+    end
   end
 
   def thank_you

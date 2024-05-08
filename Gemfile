@@ -33,6 +33,10 @@ gem "administrate"
 
 gem "http"
 
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
