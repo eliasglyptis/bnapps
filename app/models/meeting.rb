@@ -14,7 +14,7 @@ class Meeting < ApplicationRecord
   end
 
   def show_start_time
-    "#{self.start_time.to_datetime.strftime('%Y-%m-%dT%H:%M:%S')}"
+    "#{self.start_time.to_datetime.strftime('%Y-%m-%dT%H:%M:%S')} (EDT)"
     #self.start_time.strftime("%Y-%m-%dT%H:%M:%S")
   end
 
