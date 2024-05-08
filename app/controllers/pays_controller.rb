@@ -1,6 +1,6 @@
 class PaysController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_meeting, only: [:purchase, :join_free]
+  before_action :authenticate_user!, except: [:webhook] # exception webhook because webhook is calling from outside the app.
+  before_action :set_meeting, except: [:webhook] # exception webhook because webhook is calling from outside the app.
   
 
   def purchase
@@ -61,6 +61,35 @@ class PaysController < ApplicationController
     redirect_to dashboard_path
   end
 
+  protect_from_forgery except: :webhook
+  def webhook
+    endpoint_secret = Rails.application.credentials[Rails.env.to_sym][:stripe_endpoint_secret]
+    event = nil
+
+    begin
+      sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+      payload = request.body.read
+      event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
+    rescue JSON::ParserError => e
+      # Invalid payload
+      #return status 400
+      render json: {message: e}, status: 400
+      return
+    rescue Stripe::SignatureVerificationError => e
+      # Invalid signature
+      #return status 400
+      render json: {message: e}, status: 400
+      return
+    end
+
+    # Create new booking if payment success
+    if event['type'] == 'checkout.session.completed'
+      create_booking(event.data.object)
+    end
+    render json: {message: "Success"}, status: 200
+
+  end
+
   private
 
   def set_meeting
@@ -69,4 +98,42 @@ class PaysController < ApplicationController
     flash[:alert] = "Meeting not found."
     redirect_to dashboard_path
   end
+
+  def create_booking(checkout_session)
+    # 1. Retrieve the meeting using the client reference ID
+    begin
+      meeting = Meeting.find(checkout_session.client_reference_id)
+    rescue ActiveRecord::RecordNotFound
+      Rails.logger.error "Meeting not found for client reference ID: #{checkout_session.client_reference_id}"
+      return
+    end
+  
+    # 2. Retrieve the user using the Stripe customer ID
+    user = User.find_by(stripe_customer_id: checkout_session.customer)
+    unless user
+      Rails.logger.error "User not found for Stripe customer ID: #{checkout_session.customer}"
+      return
+    end
+  
+    # 3. Check if a booking already exists for this user and meeting
+    if Booking.exists?(user_id: user.id, meeting_id: meeting.id)
+      Rails.logger.warn "Booking already exists for user #{user.id} and meeting #{meeting.id}"
+      return
+    end
+  
+    # 4. Create a new booking in the database
+    begin
+      Booking.transaction do
+        booking = Booking.create!(
+          user_id: user.id,
+          meeting_id: meeting.id,
+          price: meeting.price
+        )
+        Rails.logger.info "Booking created successfully: #{booking.inspect}"
+      end
+    rescue StandardError => e
+      Rails.logger.error "Failed to create booking: #{e.message}"
+    end
+  end
+  
 end
