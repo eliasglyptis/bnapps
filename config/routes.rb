@@ -13,10 +13,10 @@ Rails.application.routes.draw do
   get 'contact', to: "pages#contact"
   get 'thank_you', to: "pages#thank_you"
   get "receipt/:booking_id", to: "pages#receipt", as: "receipt_pdf"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  post "purchase", to: "pays#purchase"
+  post "join", to: "pays#join_free"
+  
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")

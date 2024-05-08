@@ -25,9 +25,17 @@
               <h1 class="text-gray-700 font-bold text-lg">
                 <%= meeting.show_price %>
               </h1>
-              <button class="hover:scale-110 duration-300 px-3 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded" aria-label="<%= meeting.is_premium ? 'Purchase ticket' : 'Join event' %>">
-                <%= meeting.is_premium ? "Purchase" : "Join" %>
-              </button>
+              <% if meeting.is_premium  %>
+                <%= form_tag purchase_path, method: :post, data: {turbo: false} do %>
+                  <input type="hidden" name="meeting_id", value="<%= meeting.id %>" >
+                  <%= submit_tag "Purchase", data: {disable_with: "Processing..."}, class: "hover:scale-110 duration-300 px-3 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded" %>
+                <% end %>
+              <% else %>
+                <%= form_tag join_path, method: :post, data: {turbo: false} do %>
+                  <input type="hidden" name="meeting_id", value="<%= meeting.id %>" >
+                  <%= submit_tag "Join", data: {disable_with: "Processing..."}, class: "hover:scale-110 duration-300 px-3 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded" %>
+                <% end %>
+              <% end %>
             </div>
           </div>
         </div>
