@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_action :authenticate_user!, only: [:dashboard, :receipt]
+  before_action :authenticate_user!, only: [:dashboard, :receipt, :zoom, :thank_you]
 
   def home
     @meetings = Meeting.upcoming
@@ -30,4 +30,12 @@ class PagesController < ApplicationController
 
   def thank_you
   end
+
+  def zoom
+    is_joined = current_user.bookings.exists?(meeting_id: params[:meeting_id])
+    redirect_to dashboard_path, alert: "You don't have persmission for this action" if !is_joined
+
+    @meeting = Meeting.find(params[:meeting_id])
+  end
+
 end

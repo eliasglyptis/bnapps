@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'contact', to: "pages#contact"
   get 'thank_you', to: "pages#thank_you"
   get "receipt/:booking_id", to: "pages#receipt", as: "receipt_pdf"
+  get "zoom/:meeting_id", to: "pages#zoom", as: "zoom_view"
 
   post "purchase", to: "pays#purchase"
   post "join", to: "pays#join_free"

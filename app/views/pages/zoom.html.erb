@@ -1,0 +1,8 @@
+<section
+  data-controller="zoom"
+  data-zoom-meeting-number-value="<%= @meeting.zoom_id %>"
+  data-zoom-meeting-password-value="<%= @meeting.password %>"
+  data-zoom-user-name-value="<%= current_user.full_name %>"
+  data-zoom-csrf-token-value="<%= form_authenticity_token.to_s %>"
+>
+</section>
