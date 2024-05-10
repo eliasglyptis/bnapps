@@ -38,6 +38,8 @@ gem 'wkhtmltopdf-binary'
 
 gem "stripe", '8.2.0'
 
+gem "jwt"
+
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"

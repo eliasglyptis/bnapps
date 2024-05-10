@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   post "join", to: "pays#join_free"
   # Post method to webhook for stripe
   post "webhook", to: "pays#webhook"
+  post "generate_signature", to: "pages#generate_signature"
   
   get "up" => "rails/health#show", as: :rails_health_check
 
