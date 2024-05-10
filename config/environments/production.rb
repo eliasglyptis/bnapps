@@ -95,4 +95,13 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   #config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.smtp_settings = {
+    :user_name => 'apikey',
+    :password => Rails.application.credentials[Rails.env.to_sym][:sendgrid_api_key],
+    :domain => 'protonmail.com',
+    :address => 'smtp.sendgrid.net',
+    :port => 587,
+    :authentication => :plain,
+    :enable_starttls_auto => true
+  }
 end
